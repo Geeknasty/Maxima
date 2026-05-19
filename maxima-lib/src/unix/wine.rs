@@ -465,6 +465,28 @@ pub async fn setup_wine_registry() -> Result<(), NativeError> {
     )
     .await?;
 
+    let wine_tz = env::var("KYBER_WINE_TIMEZONE")
+        .unwrap_or_else(|_| "UTC".to_string());
+
+    run_wine_command(
+        "reg",
+        Some(vec![
+            "add",
+            "HKLM\\System\\CurrentControlSet\\Control\\TimeZoneInformation",
+            "/v",
+            "TimeZoneKeyName",
+            "/t",
+            "REG_SZ",
+            "/d",
+            wine_tz.as_str(),
+            "/f",
+        ]),
+        None,
+        false,
+        CommandType::Run,
+    )
+    .await?;
+
     Ok(())
 }
 
