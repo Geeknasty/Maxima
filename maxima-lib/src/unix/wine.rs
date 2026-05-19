@@ -260,6 +260,7 @@ pub async fn run_wine_command<I: IntoIterator<Item = T>, T: AsRef<OsStr>>(
         .env("PROTON_EAC_RUNTIME", eac_path)
         .env("WINEDEBUG", "fixme-all")
         .env("LD_PRELOAD", "") // Fixes some log errors for some games
+        .env("TZ", env::var("TZ").unwrap_or_else(|_| "UTC".to_string()))
         .arg(arg);
 
     if !wine_path.ends_with("umu-run") {
